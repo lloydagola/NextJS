@@ -1,26 +1,22 @@
-import {useState, useEffect} from 'react'
+import { useEffect, useState } from "react";
 
 export const REQUEST_STATUS = {
   LOADING: "loading",
   SUCCESS: "success",
   FAILURE: "failure",
-}
+};
 
-const useRequestDelay = (delayTime = 1000, initialData = []) => {
-
-  const [data, setData] = useState(initialData);
+function useRequestDelay(delayTime = 1000, initialData = []) {
+  const [data, setData] = useState([]);
   const [requestStatus, setRequestStatus] = useState(REQUEST_STATUS.LOADING);
   const [error, setError] = useState("");
-
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
   useEffect(() => {
     async function delayFunc() {
       try {
         await delay(delayTime);
-        //throw "Had Error."
         setRequestStatus(REQUEST_STATUS.SUCCESS);
-        setData(data);
+        setData(initialData);
       } catch (e) {
         setRequestStatus(REQUEST_STATUS.FAILURE);
         setError(e);
@@ -29,27 +25,36 @@ const useRequestDelay = (delayTime = 1000, initialData = []) => {
     delayFunc();
   }, []);
 
-  function updateRecord(recordUpdated, doneCallback){
-    const newRecords = data.map(rec => {
+  function updateRecord(recordUpdated, doneCallback) {
+    const originalRecords = [...data];
+    const newRecords = data.map(function (rec) {
       return rec.id === recordUpdated.id ? recordUpdated : rec;
-    })
+    });
 
-    async function delayFunction(){
-      try{
-        await delay(delayTime)
-        if(doneCallback){
-          doneCallback()
+    async function delayFunction() {
+      try {
+        setData(newRecords);
+        await delay(delayTime);
+        if (doneCallback) {
+          doneCallback();
         }
-        setData(newRecords)
-      }
-      catch(e){
-        console.log('error thrown inside delayFunction', error)
+      } catch (error) {
+        console.log("error thrown inside delayFunction", error);
+        if (doneCallback) {
+          doneCallback();
+        }
+        setData(originalRecords);
       }
     }
     delayFunction();
-  } 
+  }
 
-  return {data, requestStatus, error, updateRecord}
+  return {
+    data,
+    requestStatus,
+    error,
+    updateRecord,
+  };
 }
 
-export default useRequestDelay
+export default useRequestDelay;
