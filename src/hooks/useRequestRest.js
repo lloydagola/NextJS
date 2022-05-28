@@ -13,14 +13,16 @@ function useRequestRest() {
   const [data, setData] = useState([]);
   const [requestStatus, setRequestStatus] = useState(REQUEST_STATUS.LOADING);
   const [error, setError] = useState("");
-  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   useEffect(() => {
     async function delayFunc() {
       try {
-        const { data } = await axios.get(restUrl);
+        const {
+          data: { speakers },
+        } = await axios.get(restUrl);
+        console.log(speakers);
         setRequestStatus(REQUEST_STATUS.SUCCESS);
-        setData(data);
+        setData(speakers);
       } catch (e) {
         setRequestStatus(REQUEST_STATUS.FAILURE);
         setError(e);

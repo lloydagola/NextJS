@@ -15,7 +15,8 @@ export default async function handler(req, res) {
     const readFileData = await readFile(jsonFile);
     await delay(1000);
 
-    const speakers = JSON.parse(readFileData).speakers;
+    const speakers = JSON.parse(readFileData);
+    console.log(speakers);
 
     if (speakers) {
       res.setHeader("Content-Type", "application/json");
