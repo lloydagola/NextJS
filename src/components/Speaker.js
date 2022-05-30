@@ -135,10 +135,23 @@ const SpeakerNoErrorBoundary = memo(function Speaker({
   updateRecord,
   insertRecord,
   deleteRecord,
+  showErrorCard,
 }) {
   const { showSessions } = useContext(SpeakerFilterContext);
 
-  console.log(`speaker: ${speaker.id} ${speaker.first} ${speaker.last}`);
+  if (showErrorCard) {
+    return (
+      <div className="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-sm-12 col-xs-12">
+        <div className="card card-height p-4 mt-4">
+          <img src="/images/speaker-99999.jpg" />
+          <div>
+            <b>Error Showing Speaker</b>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <SpeakerProvider
       speaker={speaker}
@@ -157,14 +170,16 @@ const SpeakerNoErrorBoundary = memo(function Speaker({
     </SpeakerProvider>
   );
 },
-areEquualSpeaker);
+areEqualSpeaker);
 
-function areEquualSpeaker(prevProps, nextProps) {
+function areEqualSpeaker(prevProps, nextProps) {
   return prevProps.speaker.favorite === nextProps.speaker.favorite;
 }
 
 const Speaker = (props) => (
-  <ErrorBoundary>
+  <ErrorBoundary
+    errorUI={<SpeakerNoErrorBoundary {...props} showErrorCard={true} />}
+  >
     <SpeakerNoErrorBoundary {...props} />
   </ErrorBoundary>
 );
