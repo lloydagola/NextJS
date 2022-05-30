@@ -1,6 +1,7 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, memo } from "react";
 import { SpeakerFilterContext } from "../contexts/SpeakerFilterContext";
 import useRequestDelay from "../hooks/useRequestDelay";
+import ErrorBoundary from "./ErrorBoundary";
 import { SpeakerContext, SpeakerProvider } from "../contexts/SpeakerContext";
 import SpeakerDelete from "./SpeakerDelete.js";
 
@@ -113,7 +114,7 @@ function SpeakerDemographics() {
       </div>
       <SpeakerFavorite />
       <div>
-        <p className="card-description">{bio}</p>
+        <p className="card-description">{bio.substr(0, 70)}</p>
         <div className="social d-flex flex-row mt-4">
           <div className="company">
             <h5>Company</h5>
@@ -129,8 +130,15 @@ function SpeakerDemographics() {
   );
 }
 
-function Speaker({ speaker, updateRecord, insertRecord, deleteRecord }) {
+const SpeakerNoErrorBoundary = memo(function Speaker({
+  speaker,
+  updateRecord,
+  insertRecord,
+  deleteRecord,
+}) {
   const { showSessions } = useContext(SpeakerFilterContext);
+
+  console.log(`speaker: ${speaker.id} ${speaker.first} ${speaker.last}`);
   return (
     <SpeakerProvider
       speaker={speaker}
@@ -148,6 +156,17 @@ function Speaker({ speaker, updateRecord, insertRecord, deleteRecord }) {
       </div>
     </SpeakerProvider>
   );
+},
+areEquualSpeaker);
+
+function areEquualSpeaker(prevProps, nextProps) {
+  return prevProps.speaker.favorite === nextProps.speaker.favorite;
 }
+
+const Speaker = (props) => (
+  <ErrorBoundary>
+    <SpeakerNoErrorBoundary {...props} />
+  </ErrorBoundary>
+);
 
 export default Speaker;
