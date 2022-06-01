@@ -4,5 +4,6 @@
   "/_error": "pages/_error.js",
   "/": "pages/index.js",
   "/speakers": "pages/speakers.js",
-  "/next/dist/pages/_error": "pages/next/dist/pages/_error.js"
+  "/next/dist/pages/_error": "pages/next/dist/pages/_error.js",
+  "/api/speakers": "pages/api/speakers.js"
 }
