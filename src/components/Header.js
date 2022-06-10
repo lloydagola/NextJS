@@ -41,7 +41,11 @@ function Header({ loggedInUser, setLoggedInUser }) {
       <div className="container mobile-container">
         <div className="d-flex justify-content-between">
           <div>
-            <img alt="SVCC Home Page" src="/images/SVCCLogo.png" />
+            <img
+              alt="SVCC Home Page"
+              src="/images/logo.webp"
+              style={{ height: "2rem" }}
+            />
           </div>
           <div className="light">
             <h4 className="header-title">Silicon Valley Code Camp</h4>
